@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="thirdparties/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Lister | Create Beautiful Notes</title>
+</head>
+<body>
+    <header>
+        <div class="collapse bg-dark" id="navbarHeader">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-8 col-md-7 py-4">
+                <h4 class="text-white">About</h4>
+                <p class="text-muted">Add some information about the album below, the author, or any other background context. Make it a few sentences long so folks can pick up some informative tidbits. Then, link them off to some social networking sites or contact information.</p>
+              </div>
+              <div class="col-sm-4 offset-md-1 py-4">
+                <h4 class="text-white">Contact</h4>
+                <ul class="list-unstyled">
+                  <li><a href="#" class="text-white">Follow on Twitter</a></li>
+                  <li><a href="#" class="text-white">Like on Facebook</a></li>
+                  <li><a href="#" class="text-white">Email me</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="navbar navbar-dark bg-dark shadow-sm">
+          <div class="container d-flex justify-content-between">
+            <a href="#" class="navbar-brand d-flex align-items-center">
+              <strong>Lister</strong>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+    <div class="container-fluid " style="width: 100% !important; padding-left:0; padding-right: 0;">
+        <section class="jumbotron text-center">
+            <div class="container">
+              <h1>Lister</h1>
+              <p class="lead text-muted">Create beautiful notes that people love</p>
+              <p>
+                <a href="#" class="btn btn-primary my-2" data-toggle="modal" data-target="#createNoteModal">Create note</a>
+              </p>
+            </div>
+          </section> 
+
+
+          <div class="row">
+                <div class="col-md-6 m-auto">
+                        <div id="notes"></div>
+                </div>
+          </div>
+
+
+       
+    </div>
+
+    <!-- Modals -->  
+  <!-- Modal -->
+  <div class="modal fade" id="createNoteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
+    <div class="modal-dialog">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <h5 class="modal-title text-white id="exampleModalLabel">Create Note</h5>
+          <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-md-10">
+                    <form class="form" id="create-note-form">
+                        <div class="form-group">
+                            <label class="text-white">Note title</label>
+                            <input type="text" class="form-control" name='note_title' placeholder="Enter note title">
+                        </div>
+
+                        <div class="form-group">
+                            <label class="text-white">Note Content</label>
+                            <textarea class="form-control" name='note_content' placeholder="Enter note content"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save note</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer border-0">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!--End of Modals-->
+
+    
+
+    <script src="thirdparties/jquery/jquery.min.js"></script>
+    <script src="thirdparties/bootstrap/js/bootstrap.min.js"></script>
+
+    <script src="js/script.js"></script>
+</body>
+</html>
