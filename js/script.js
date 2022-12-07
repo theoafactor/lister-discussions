@@ -1,4 +1,7 @@
+//We are getting the form from the DOM
 const createNoteForm = document.querySelector("#create-note-form");
+
+//We are get
 let notesSpace = document.querySelector("#notes");
 
 //LOAD ALL NOTES
@@ -54,22 +57,37 @@ createNoteForm.addEventListener("submit", function(event){
 
 })
 
+/**
+ * This function displays all the notes currently saved to 
+ * the localStorage. 
+ */
 function displayNotes(){
+
+    //call the getAllSavedNotes() function to retrieve notes saved
     let all_saved_notes = getAllSavedNotes();
 
+    // the first part of the display table
     let table_code = `<table class='table table-striped table-hover'>
                         <thead>
                             <th>Title</th>
                             <th></th>
                         </thead>
                         <tbody>`;
+    
     for(let i = 0; i < all_saved_notes.length; i++){
 
         console.log(all_saved_notes[i])
+        let id = all_saved_notes[i].id;
 
             table_code += `<tr>
-                            <td>${all_saved_notes[i].title}</td>
-                            <td><button class='btn btn-sm btn-danger' onclick="deleteNote('${all_saved_notes[i].id}')"><small>Delete note</small></button></td>
+                            <td>
+                            <a href='#' onclick="showHideContent('${id}')">${all_saved_notes[i].title}</a>
+                            <div class='note-content note-${id}'><span>${all_saved_notes[i].content}</span></div>
+                            </td>
+                            <td>
+                            <button class='btn btn-sm btn-default' onclick="editNote('${all_saved_notes[i].id}')"><i class="icon-edit" style='color: black; font-size: 2em;'></i></button>
+                            <button class='btn btn-sm btn-default' onclick="deleteNote('${all_saved_notes[i].id}')"><i class="icon-trash" style='color: red; font-size: 2em;'></i></button>
+                            </td>
                         </tr>`
 
         
@@ -80,6 +98,66 @@ function displayNotes(){
 
     
     notesSpace.innerHTML = table_code;
+}
+
+
+function showHideContent(id){
+   
+    if(document.querySelector(`.note-${id}`).style.display == "block"){
+        document.querySelector(`.note-${id}`).style.display = "none"
+    }else{
+        document.querySelector(`.note-${id}`).style.display = "block";
+    }
+
+
+}
+
+function editNote(id){
+    // 1. get the note from the storage using the id 
+    // 2. design the div element to put the note 
+    // 3. attach the div element to the DOM 
+    // 4. show the div element 
+    document.querySelector(`.note-${id}`).innerHTML = "";
+    //1. 
+    let note = getNoteById(id);
+
+    //2.
+    if(document.getElementById(`note-${id}`)){
+        document.getElementById(`note-${id}`).remove();
+    }
+    
+    let divElement = document.createElement("div");
+
+    divElement.id = `note-${id}`;
+
+    
+
+    divElement.innerHTML = `<div class='mt-3'>
+                                <form class='form'>
+                                    <div class='form-group'>
+                                        <label>Title</label>
+                                        <input type='text' class='form-control' value='${note.title}'>
+                                    </div>
+
+                                    <div class='form-group'>
+                                        <label>Content</label>
+                                        <textarea class='form-control'>${note.content}</textarea>
+                                    </div>
+
+                                    <div class='form-group'>
+                                       <button class='btn btn-sm btn-warning'>Save update</button>
+                                    </div>
+                                </form>
+                            
+                            </div>`
+
+    
+    //3.
+    document.querySelector(`.note-${id}`).appendChild(divElement);
+    document.querySelector(`.note-${id}`).style.display = "block";
+
+
+    
 }
 
 
@@ -214,4 +292,29 @@ function getAllSavedNotes(){
 
         return [];
     }
+}
+
+
+function getNoteById(id){
+    let savedNotes = localStorage.getItem("notes");
+
+    let matchednote = null;
+
+    if(savedNotes){
+        savedNotes = JSON.parse(savedNotes);
+
+        for(let i = 0; i < savedNotes.length; i++){
+            if(savedNotes[i].id == id){
+                //we have found a match
+                matchednote = savedNotes[i];
+                break;
+            }
+        }
+    }
+
+    return matchednote;
+
+
+    
+
 }
