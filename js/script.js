@@ -240,41 +240,53 @@ function confirmDeleteNote(id){
 }
 
 
-function saveNote(note_title, note_content){
+async function saveNote(note_title, note_content){
 
-    let new_note = {
-        title: note_title,
-        content: note_content, 
-        id: new Date().getTime()
-    }
+    // let new_note = {
+    //     title: note_title,
+    //     content: note_content, 
+    //     id: new Date().getTime()
+    // }
 
-    //get the localStorage
-    let savedNotes = localStorage.getItem('notes');
 
-    if(savedNotes == null){
-        //there is nothing in the storage
-        savedNotes = [];
+    const feedback = await axios.post("http://localhost:4343/save-note", {
+        note_title: note_title,
+        note_content: note_content
+    })
 
-        savedNotes.push(new_note);
-        savedNotes = JSON.stringify(savedNotes);
-        localStorage.setItem("notes", savedNotes);
+    console.log(feedback);
 
-        return true;
-    }else{
-        //there is something in the storage
-        savedNotes = JSON.parse(savedNotes);
+    
+
+
+
+    // //get the localStorage
+    // let savedNotes = localStorage.getItem('notes');
+
+    // if(savedNotes == null){
+    //     //there is nothing in the storage
+    //     savedNotes = [];
+
+    //     savedNotes.push(new_note);
+    //     savedNotes = JSON.stringify(savedNotes);
+    //     localStorage.setItem("notes", savedNotes);
+
+    //     return true;
+    // }else{
+    //     //there is something in the storage
+    //     savedNotes = JSON.parse(savedNotes);
 
        
 
-        savedNotes.push(new_note);
+    //     savedNotes.push(new_note);
 
-        savedNotes = JSON.stringify(savedNotes);
+    //     savedNotes = JSON.stringify(savedNotes);
 
-        localStorage.setItem("notes", savedNotes);
+    //     localStorage.setItem("notes", savedNotes);
 
-        return true;
+    //     return true;
 
-    }
+    // }
 
 
 }
