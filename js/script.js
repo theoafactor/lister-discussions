@@ -1,32 +1,49 @@
 //We are getting the form from the DOM
 const createNoteForm = document.querySelector("#create-note-form");
+const createNoteInfo =  document.querySelector("#create-note-info")
 
 //We are get
 let notesSpace = document.querySelector("#notes");
 
 //LOAD ALL NOTES
  //get all saved notes
- let all_saved_notes = getAllSavedNotes();
+getAllSavedNotes().then((all_saved_notes) => {
 
- if(all_saved_notes.length > 0){
+    console.log("All notes: ", all_saved_notes)
 
-    displayNotes();
+    if(all_saved_notes.length > 0){
+
+        displayNotes();
+    }
+    else{
+            notesSpace.innerHTML = `<div class='col-md-8 m-auto text-center'>
+                <div class='alert alert-warning'>
+                            <p>No note available at this time</p>
+                </div>
+                    <button class="btn btn-sm btn-primary" data-toggle='modal' data-target='#createNoteModal'>Create your first note</button>
+            </div>`
  }
- else{
-        notes.innerHTML = `<div class='col-md-8 m-auto text-center'>
-             <div class='alert alert-warning'>
-                        <p>No note available at this time</p>
-             </div>
-                <button class="btn btn-sm btn-primary" data-toggle='modal' data-target='#createNoteModal'>Create your first note</button>
-        </div>`
- }
+
+})
+
+ 
 
 
 
 
 //when the createNoteForm is submitted
-createNoteForm.addEventListener("submit", function(event){
+createNoteForm.addEventListener("submit", async function(event){
     event.preventDefault();
+
+    createNoteInfo.classList.remove("text-danger");
+    createNoteInfo.classList.remove("text-warning");
+    createNoteInfo.classList.add("text-primary");
+    createNoteInfo.innerHTML = `
+                <div>Creating your note. Please wait ...</div>
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+    `;
 
 
     let note_title = this.note_title.value.trim();
@@ -37,15 +54,29 @@ createNoteForm.addEventListener("submit", function(event){
 
     if(note_title == null || note_content == null){
         // there is an issue 
-        alert("All fields are required");
+        //alert("All fields are required");
+        createNoteInfo.classList.remove("text-primary");
+        createNoteInfo.classList.add("text-warning");
+        createNoteInfo.innerHTML = `All fields are required`;
+        
     }else{
-        const feedback = saveNote(note_title, note_content);
+        const feedback = await saveNote(note_title, note_content);
+
+        console.log("Feedback from create: ", feedback)
+
         //feedback
         if(feedback == true){
-            alert("New note saved");
+            //alert("New note saved");
+
+            createNoteInfo.classList.remove("text-danger");
+            createNoteInfo.classList.remove("text-warning");
+            createNoteInfo.classList.remove("text-primary");
+            createNoteInfo.classList.add("text-success");
+
+            createNoteInfo.innerHTML = "New note saved";
 
             //close the modal
-            $("#createNoteModal").modal("hide");
+            //$("#createNoteModal").modal("hide");
 
             //get all saved notes
             displayNotes();
@@ -61,10 +92,10 @@ createNoteForm.addEventListener("submit", function(event){
  * This function displays all the notes currently saved to 
  * the localStorage. 
  */
-function displayNotes(){
+async function displayNotes(){
 
     //call the getAllSavedNotes() function to retrieve notes saved
-    let all_saved_notes = getAllSavedNotes();
+    let all_saved_notes = await getAllSavedNotes();
 
     // the first part of the display table
     let table_code = `<table class='table table-striped table-hover'>
@@ -81,8 +112,8 @@ function displayNotes(){
 
             table_code += `<tr>
                             <td>
-                            <a href='#' onclick="showHideContent('${id}')">${all_saved_notes[i].title}</a>
-                            <div class='note-content note-${id}'><span>${all_saved_notes[i].content}</span></div>
+                            <a href='#' onclick="showHideContent('${id}')">${all_saved_notes[i].note_title}</a>
+                            <div class='note-content note-${id}'><span>${all_saved_notes[i].note_content}</span></div>
                             </td>
                             <td>
                             <button class='btn btn-sm btn-default' onclick="editNote('${all_saved_notes[i].id}')"><i class="icon-edit" style='color: black; font-size: 2em;'></i></button>
@@ -254,7 +285,11 @@ async function saveNote(note_title, note_content){
         note_content: note_content
     })
 
-    console.log(feedback);
+    if(feedback.data){
+        return true;
+    }else{
+        return false;
+    }
 
     
 
@@ -292,18 +327,44 @@ async function saveNote(note_title, note_content){
 }
 
 
-function getAllSavedNotes(){
-    let notes = localStorage.getItem("notes");
+async function getAllSavedNotes(){
+    // let notes = localStorage.getItem("notes");
+    //start the spinner 
+    notesSpace.innerHTML = `<div class='col-md-8 m-auto text-center'>
+                                <div class=''>Getting your notes ...</div>
+                                <div class="spinner-border mt-2" role="status">
+                                <span class="sr-only">Loading...</span>
+                                
+                            </div>
+                                                
+            </div>`
+    let feedback = await axios.get("http://localhost:4343/get-all-saved-notes")
 
-    if(notes){
-        notes = JSON.parse(notes);
+   
 
-        return notes;
+    if(feedback){
+        //stop the spinner
+        // notesSpace.innerHTML = "Notes now available from database"
+        console.log(feedback.data.data)
+
+        notes = feedback.data.data;
+
+        return notes
 
     }else{
-
         return [];
     }
+
+
+    // if(notes){
+    //     notes = JSON.parse(notes);
+
+    //     return notes;
+
+    // }else{
+
+    //     return [];
+    // }
 }
 
 

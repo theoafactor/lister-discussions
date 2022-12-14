@@ -37,9 +37,21 @@ server.post("/save-note", async (request, response) => {
     }
 
 
+})
 
 
+server.get("/get-all-saved-notes", async (request, response) => {
+    //get the saved notes from mongodb
 
+    const feedback = await client.db(process.env.DB_NAME).collection(process.env.COLLECTION).find().toArray();
+
+    if(feedback){
+        response.send({
+            message: "note retrieved successfully",
+            data: feedback,
+            code: "success"
+        })
+    }
 
 })
 
