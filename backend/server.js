@@ -23,10 +23,14 @@ server.post("/save-note", async (request, response) => {
 
     let note_title = request.body.note_title;
     let note_content = request.body.note_content;
+    let date_created = new Date().getTime();
+    let author_name = "Olu Adeyemo";
 
     const feedback = await client.db(process.env.DB_NAME).collection("notes").insertOne({
         note_title: note_title,
-        note_content: note_content
+        note_content: note_content,
+        date_created: date_created,
+        author_name: author_name
     })
 
     if(feedback){

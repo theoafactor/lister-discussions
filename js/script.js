@@ -9,7 +9,7 @@ let notesSpace = document.querySelector("#notes");
  //get all saved notes
 getAllSavedNotes().then((all_saved_notes) => {
 
-    console.log("All notes: ", all_saved_notes)
+    //console.log("All notes: ", all_saved_notes)
 
     if(all_saved_notes.length > 0){
 
@@ -107,8 +107,8 @@ async function displayNotes(){
     
     for(let i = 0; i < all_saved_notes.length; i++){
 
-        console.log(all_saved_notes[i])
-        let id = all_saved_notes[i].id;
+        console.log("Note: ", all_saved_notes[i]._id)
+        let id = all_saved_notes[i]._id;
 
             table_code += `<tr>
                             <td>
@@ -340,7 +340,7 @@ async function getAllSavedNotes(){
             </div>`
     let feedback = await axios.get("http://localhost:4343/get-all-saved-notes")
 
-   
+   console.log("From axios: ", feedback)
 
     if(feedback){
         //stop the spinner
