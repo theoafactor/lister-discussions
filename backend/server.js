@@ -59,6 +59,29 @@ server.get("/get-all-saved-notes", async (request, response) => {
 
 })
 
+//Delete the note from mongodb
+server.post("/delete-note", async (request, response) => {
+
+    const note_id = request.body.id;
+
+
+
+   const feedback =  await client.db(process.env.DB_NAME).collection(process.env.COLLECTION).deleteOne({ _id: mongodb.ObjectId(note_id)});
+
+    if(feedback){
+        response.send({
+            message: "Note deleted",
+            code: "success",
+            data: {
+                feedback: feedback
+            }
+        });
+    }else{
+        //
+    }
+
+})
+
 
 
 server.listen(process.env.PORT1, process.env.HOSTNAME, () => console.log(`Server is running on http://${process.env.HOSTNAME}:${process.env.PORT1}`))

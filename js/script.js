@@ -116,8 +116,8 @@ async function displayNotes(){
                             <div class='note-content note-${id}'><span>${all_saved_notes[i].note_content}</span></div>
                             </td>
                             <td>
-                            <button class='btn btn-sm btn-default' onclick="editNote('${all_saved_notes[i].id}')"><i class="icon-edit" style='color: black; font-size: 2em;'></i></button>
-                            <button class='btn btn-sm btn-default' onclick="deleteNote('${all_saved_notes[i].id}')"><i class="icon-trash" style='color: red; font-size: 2em;'></i></button>
+                            <button class='btn btn-sm btn-default' onclick="editNote('${all_saved_notes[i]._id}')"><i class="icon-edit" style='color: black; font-size: 2em;'></i></button>
+                            <button class='btn btn-sm btn-default' onclick="deleteNote('${all_saved_notes[i]._id}')"><i class="icon-trash" style='color: red; font-size: 2em;'></i></button>
                             </td>
                         </tr>`
 
@@ -194,6 +194,9 @@ function editNote(id){
 
 function deleteNote(id){
 
+    console.log("To be deleted: ", id);
+
+
     //prepare a dialog box instead of relying on confirm 
     let confirmation_dialog = ` <div class="modal fade" id="confirmDeleteModal_${id}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" data-backdrop="false">
     <div class="modal-dialog">
@@ -248,26 +251,16 @@ function deleteNote(id){
 }
 
 
-function confirmDeleteNote(id){
-    let savedNotes = localStorage.getItem("notes");
+async function confirmDeleteNote(id){
+   //delete the note from mongodb with the provided id
+  
+   const feedback = await axios.post("http://localhost:4343/delete-note", {id: id});
 
-    savedNotes = JSON.parse(savedNotes);
-
-    for(let i = 0; i < savedNotes.length; i++){
-        if(savedNotes[i].id == id){
-            //delete this note
-            savedNotes.splice(i, 1)
-
-            savedNotes = JSON.stringify(savedNotes);
-
-            localStorage.setItem("notes", savedNotes);
-
-            break;
-        }
+    if(feedback.data.code == "success"){
+        location.reload();
     }
 
-    return true
-
+    return false;
 }
 
 
